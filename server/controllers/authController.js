@@ -3,8 +3,20 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { User, TokenBlacklist } = require("../models");
 const { Op } = require("sequelize");
+const nodemailer = require("nodemailer")
 
-// Register user
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 587, // Gunakan port 587 untuk STARTTLS
+    secure: false, // Harus false untuk STARTTLS
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -24,7 +36,6 @@ exports.register = async (req, res) => {
     }
 };
 
-// Login user
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -58,7 +69,6 @@ exports.login = async (req, res) => {
     }
 };
 
-// Forgot password
 exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
 
@@ -75,6 +85,19 @@ exports.forgotPassword = async (req, res) => {
         user.resetPasswordExpires = resetTokenExpires;
         await user.save();
 
+        const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+        await transporter.sendMail({
+            from: `"Support Team" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: "Password Reset Request",
+            html: `
+                <p>You requested a password reset.</p>
+                <p>Click the link below to reset your password:</p>
+                <a href="${resetURL}" target="_blank">${resetURL}</a>
+                <p>This link will expire in 1 hour.</p>
+            `,
+        });
         res
             .status(200)
             .json({ message: "Password reset link has been sent to your email." });
@@ -86,7 +109,6 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
-// Reset password
 exports.resetPassword = async (req, res) => {
     const { token } = req.params;
     const { newPassword } = req.body;
@@ -126,7 +148,6 @@ exports.logout = async (req, res) => {
     }
 
     try {
-        // Simpan token ke tabel blacklist
         await TokenBlacklist.create({ token });
         res.status(200).json({ message: "User logged out successfully" });
     } catch (error) {

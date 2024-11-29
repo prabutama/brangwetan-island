@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         image: {
-            type: DataTypes.STRING(255), // URL gambar atau path gambar
+            type: DataTypes.STRING(255), 
             allowNull: true,
         },
         website_link: {
-            type: DataTypes.STRING(255), // URL website
+            type: DataTypes.STRING(255), 
             allowNull: true,
         },
     }, {

@@ -109,21 +109,17 @@ exports.deleteCollaborator = async (req, res) => {
     const collaboratorId = req.params.id;
 
     try {
-        // Cari kolaborator berdasarkan ID
         const collaborator = await Collaborator.findByPk(collaboratorId);
         if (!collaborator) {
             return res.status(404).json({ message: "Collaborator not found" });
         }
 
-        // Ambil path file dari kolom 'image'
         const imagePath = path.join(__dirname, "../uploads/collaborators", path.basename(collaborator.image));
 
-        // Hapus entitas dari database
         await collaborator.destroy();
 
-        // Hapus file dari direktori jika ada
         if (fs.existsSync(imagePath)) {
-            fs.unlinkSync(imagePath); // Hapus file secara sinkron
+            fs.unlinkSync(imagePath); 
             console.log(`File deleted: ${imagePath}`);
         } else {
             console.warn(`File not found: ${imagePath}`);

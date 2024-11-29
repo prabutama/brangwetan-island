@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         type: {
-            type: DataTypes.ENUM("text", "image", "video"),
+            type: DataTypes.ENUM("image", "video"),
             allowNull: false,
-            defaultValue: "text", // Default bisa teks, bisa diubah sesuai input admin
+            defaultValue: "image", 
         },
         content: {
             type: DataTypes.STRING(255), // Menyimpan path gambar atau URL video
