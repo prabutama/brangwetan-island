@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     User.associate = function (models) {
         User.hasMany(models.Post, {
             foreignKey: "user_id",
-            as: "posts", // Menghubungkan user dengan banyak post
+            as: "posts", 
             onDelete: "CASCADE",
         });
     };

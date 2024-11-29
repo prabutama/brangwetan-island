@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     // Setiap Post dimiliki oleh satu User
     Post.belongsTo(models.User, {
       foreignKey: "user_id",  // Kunci asing untuk menghubungkan dengan User
-      as: "user",  // Nama alias untuk asosiasi
+      as: "author",  // Nama alias untuk asosiasi
     });
   };
 

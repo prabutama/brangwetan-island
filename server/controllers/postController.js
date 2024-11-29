@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = path.join(__dirname, '../uploads/');
+        const dir = path.join(__dirname, '../uploads/posts');
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
@@ -48,7 +48,7 @@ exports.createPost = [
                 return res.status(400).json({ message: "Image file is required!" });
             }
 
-            const imagePath = `/uploads/${req.file.filename}`;
+            const imagePath = `/uploads/posts/${req.file.filename}`;
 
             const post = await Post.create({
                 title,
@@ -72,9 +72,69 @@ exports.createPost = [
 
 exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.findAll({ include: User });
+        const posts = await Post.findAll({ include: { model: User, as: "author" } });
         res.status(200).json({ posts });
     } catch (error) {
         res.status(400).json({ message: "Error fetching posts", error: error.message });
+    }
+};
+
+exports.getPostById = async (req, res) => {
+    const postId = req.params.id;
+    try {
+        const post = await Post.findByPk(postId, { include: { model: User, as: "author" } });
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        res.status(200).json({ post });
+    } catch (error) {
+        res.status(400).json({ message: "Error fetching post", error: error.message });
+    }
+};
+
+exports.updatePost = async (req, res) => {
+    const postId = req.params.id;
+    const { title, description } = req.body;
+    try {
+        const post = await Post.findByPk(postId);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        post.title = title;
+        post.description = description;
+        await post.save();
+        res.status(200).json({ message: "Post updated successfully", post });
+    } catch (error) {
+        res.status(400).json({ message: "Error updating post", error: error.message });
+    }
+};
+
+exports.deletePost = async (req, res) => {
+    const postId = req.params.id;
+
+    try {
+        // Cari kolaborator berdasarkan ID
+        const post = await Post.findByPk(postId);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        // Ambil path file dari kolom 'image'
+        const imagePath = path.join(__dirname, "../uploads/posts", path.basename(post.image));
+
+        // Hapus entitas dari database
+        await post.destroy();
+
+        // Hapus file dari direktori jika ada
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath); // Hapus file secara sinkron
+            console.log(`File deleted: ${imagePath}`);
+        } else {
+            console.warn(`File not found: ${imagePath}`);
+        }
+
+        res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error) {
+        res.status(400).json({ message: "Error deleting Post", error: error.message });
     }
 };

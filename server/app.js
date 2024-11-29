@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
+const collaboratorRoutes = require("./routes/collaboratorRoutes");
 const path = require("path");
 require("dotenv").config();
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/api/", authRoutes);
 app.use("/api/post", postRoutes)
+app.use("/api/collaborator", collaboratorRoutes)
 
 app.listen(3000, () => {
     console.log("Server running on port 3000");
