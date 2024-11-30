@@ -34,7 +34,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage,
     fileFilter,
-    limits: { fileSize: 2 * 2000 * 2000 },
+    limits: { fileSize: 2 * 5000 * 5000 },
 });
 
 exports.createCollaborator = [

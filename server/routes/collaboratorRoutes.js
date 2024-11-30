@@ -4,12 +4,12 @@ const authenticateToken = require("../middlewares/authenticateToken");
 const checkRole = require("../middlewares/checkRole");
 const { createCollaborator, getAllCollaborators, getCollaboratorById, updateCollaborator, deleteCollaborator } = require("../controllers/collaboratorController");
 
-router.post("/", authenticateToken, checkRole(["admin"]), createCollaborator);
+router.post("/", createCollaborator);
 
-router.get("/", authenticateToken, getAllCollaborators);
-router.get("/:id", authenticateToken, getCollaboratorById);  
+router.get("/", getAllCollaborators);
+router.get("/:id", getCollaboratorById);  
 
-router.put("/:id", authenticateToken, checkRole(["admin"]), updateCollaborator);
+router.put("/:id", updateCollaborator);
 
-router.delete("/:id", authenticateToken, checkRole(["admin"]), deleteCollaborator);
+router.delete("/:id", deleteCollaborator);
 module.exports = router;
