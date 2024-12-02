@@ -11,8 +11,10 @@ export const Collaborators = () => {
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState(null);
-    const [confirmDeleteId, setConfirmDeleteId] = useState(null); // ID of the collaborator to delete
+    const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);  // Add state for dialog visibility
     const user = useAuth().user;
+    const token = localStorage.getItem("token");
 
     const handleToggleForm = () => {
         setShowForm((prevShowForm) => !prevShowForm);
@@ -39,13 +41,23 @@ export const Collaborators = () => {
         if (confirmDeleteId === null) return;
 
         try {
-            await axios.delete(`http://localhost:3000/api/collaborator/${confirmDeleteId}`);
+            await axios.delete(`http://localhost:3000/api/collaborator/${confirmDeleteId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setCollaborators((prev) => prev.filter((collaborator) => collaborator.id !== confirmDeleteId));
-            setConfirmDeleteId(null); // Reset after deletion
+            setConfirmDeleteId(null);
+            setIsDialogOpen(false); // Close dialog after deletion
         } catch (err) {
             console.error("Error deleting collaborator:", err);
             alert("Failed to delete collaborator");
         }
+    };
+
+    const handleCloseDialog = () => {
+        setIsDialogOpen(false);  
+        setConfirmDeleteId(null);
     };
 
     if (loading) {
@@ -58,17 +70,20 @@ export const Collaborators = () => {
 
     return (
         <div className="relative w-full h-auto pt-10 bg-white">
-            <p className="text-center text-2xl md:text-3xl font-bold text-gray-800">Kolaborator Kami</p>
+            <p className="text-center text-2xl md:text-3xl font-bold text-hijau">Kolaborator Kami</p>
             <p className="text-center text-gray-500 text-sm md:text-base mt-3 lg:w-2/5 sm:w-3/4 mx-auto px-10">Platform pembelajaran ini adalah hasil kolaborasi yang apik dari beberapa pihak yang berdedikasi dan berkomitmen untuk memberikan pengetahuan tentang Energi Baru Terbarukan</p>
-            <div className="mt-5 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-6 justify-center lg:border-2 rounded-full py-10 lg:w-[50%] mx-auto lg:shadow-md">
+            <div className="mt-5 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-6 justify-center lg:border-2 lg:border-hijau rounded-full py-10 lg:w-[50%] mx-auto lg:shadow-md">
                 {Array.isArray(collaborators) && collaborators.map((collaborator) => (
                     <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex justify-center items-center mx-auto">
                         {
                             user && user.role === "admin" ? (
-                                <Dialog>
+                                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                                     <DialogTrigger>
                                         <Button
-                                            onClick={() => setConfirmDeleteId(collaborator.id)}
+                                            onClick={() => {
+                                                setConfirmDeleteId(collaborator.id);
+                                                setIsDialogOpen(true); // Open dialog on delete button click
+                                            }}
                                             className="absolute z-30 -top-2 -right-2 bg-black text-white p-2 rounded-full hover:bg-red-600"
                                         >
                                             <Trash className="w-4 h-4" />
@@ -80,7 +95,7 @@ export const Collaborators = () => {
                                             Apakah Anda yakin ingin menghapus kolaborator ini?
                                         </DialogDescription>
                                         <DialogFooter>
-                                            <Button variant="outline" onClick={() => setConfirmDeleteId(null)}>
+                                            <Button variant="outline" onClick={handleCloseDialog}>
                                                 Batal
                                             </Button>
                                             <Button className="bg-black" onClick={deleteCollaborator}>
@@ -130,7 +145,28 @@ export const Collaborators = () => {
                         onClick={handleToggleForm}
                         className="h-6 w-6 text-black absolute right-4 top-4 cursor-pointer"
                     />
-                    <AddForm title="Collaborators" />
+                    <AddForm
+                        title="Collaborator"
+                        api="http://localhost:3000/api/collaborator"
+                        fields={[
+                            {
+                                name: "name",
+                                label: "Nama Collaborator",
+                                placeholder: "Masukkan Nama Collaborator",
+                            },
+                            {
+                                name: "website_url",
+                                label: "Alamat Website Collaborator",
+                                placeholder: "Masukkan alamat website jika tersedia",
+                            },
+                            {
+                                name: "image",
+                                label: "Logo Collaborator",
+                                type: "file",
+                                accept: "image/*",
+                            },
+                        ]}
+                    />
                 </div>
             </div>
 
@@ -141,7 +177,7 @@ export const Collaborators = () => {
                         <Button
                             onClick={handleToggleForm}
                             variant="outline"
-                            className="py-2 px-6 flex gap-2 items-center rounded-full text-sm bg-black text-white transition duration-300"
+                            className="py-2 px-6 flex gap-2 items-center rounded-lg text-sm bg-hijau text-white hover:text-white hover:bg-green-500 transition duration-300"
                         >
                             <span>Tambah Collaborators</span>
                         </Button>

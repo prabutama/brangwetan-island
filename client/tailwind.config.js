@@ -14,6 +14,8 @@ export default {
         inter: ['Inter', 'sans-serif'],
       },
       colors: {
+        hijau: "#41b05c",
+        kuning: "#b6d752",
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

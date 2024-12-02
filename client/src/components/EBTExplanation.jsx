@@ -6,7 +6,7 @@ const EBTExplanation = () => {
             <div className="mx-auto flex flex-col lg:flex-row-reverse items-center justify-center max-w-screen-xl">
                 {/* Text Section */}
                 <div className="w-full lg:w-1/2 mb-8 lg:mb-0">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 text-center lg:text-left">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-hijau text-center lg:text-left">
                         Apa itu <br /> Energi Baru Terbarukan?
                     </h1>
                     <p className="text-center lg:text-left text-gray-500 text-sm md:text-base mt-3 lg:w-3/4 sm:w-3/4">

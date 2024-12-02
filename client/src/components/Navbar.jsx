@@ -12,12 +12,12 @@ const Navbar = () => {
     const { user, logout } = useAuth();
 
     const menu = [
-        { name: "Beranda", href: "#", icon: Home },
+        { name: "Beranda", href: "/", icon: Home },
         { name: "Modul", href: "#", icon: BookOpen },
     ];
 
     return (
-        <nav className="bg-black py-4 px-6 shadow-lg fixed w-full top-0 z-50 transition-all duration-300 ease-in-out">
+        <nav className="bg-hijau py-4 px-6 fixed w-full top-0 z-50 transition-all duration-300 ease-in-out rounded-b-lg">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex gap-2 items-center">
                     <img
@@ -52,7 +52,7 @@ const Navbar = () => {
                         <a
                             key={index}
                             href={item.href}
-                            className="text-white text-lg font-semibold hover:text-indigo-300 transition-colors duration-300"
+                            className="text-white text-lg font-semibold transition-colors duration-300"
                         >
                             {item.name}
                         </a>
@@ -82,7 +82,7 @@ const Navbar = () => {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (
-                            <Button className="bg-white text-black text-sm py-3 px-6 rounded-lg hover:bg-gray-100">
+                            <Button className="bg-white text-hijau text-sm py-3 px-6 rounded-lg hover:bg-gray-100">
                                 <Link to="/login">
                                     Login sebagai Admin
                                 </Link>
@@ -135,7 +135,7 @@ const Navbar = () => {
                                     </DropdownMenu>
                                 </div>
                             ) : (
-                                <Button className="bg-indigo-600 text-white text-sm py-3 px-6 rounded-lg hover:bg-indigo-700">
+                                <Button className="bg-hijau text-white text-sm py-3 px-6 rounded-lg">
                                     <Link to="/login">
                                         Login sebagai Admin
                                     </Link>

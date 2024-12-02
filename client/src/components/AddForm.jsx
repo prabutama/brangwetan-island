@@ -5,87 +5,128 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
-export function AddForm({ title = "Collaborator" }) {
-    const [formData, setFormData] = useState({
-        name: "",
-        website_url: "",
-        image: null,
-    });
+export function AddForm({ title = "Form", api, fields = [] }) {
+    const initialData = fields.reduce((acc, field) => {
+        acc[field.name] = field.type === "file" ? null : "";
+        return acc;
+    }, {});
+
+    const [formData, setFormData] = useState(initialData);
+    const [alert, setAlert] = useState({ message: "", variant: "" });
+    const token = localStorage.getItem("token");
 
     const handleInputChange = (e) => {
-        const { name, value, files } = e.target;
+        const { name, value, files, type } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [name]: name === "image" ? files[0] : value,
+            [name]: type === "file" ? files[0] : value,
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        for (const field of fields) {
+            if (field.required && !formData[field.name]) {
+                setAlert({
+                    message: `${field.label} wajib diisi.`,
+                    variant: "error",
+                });
+                return;
+            }
+        }
+
         const data = new FormData();
-        data.append("name", formData.name);
-        data.append("website_url", formData.web_url);
-        if (formData.image) data.append("image", formData.image);
+        Object.keys(formData).forEach((key) => {
+            if (formData[key]) {
+                data.append(key, formData[key]);
+            }
+        });
 
         try {
-            const response = await axios.post(
-                "http://localhost:3000/api/collaborator",
-                data
-            );
-            alert(response.data.message);
+            const response = await axios.post(api, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setAlert({
+                message: `${title} berhasil ditambahkan!`,
+                variant: "success",
+            });
+            setFormData(initialData);
         } catch (error) {
-            console.error("Error:", error.response?.data || error.message || error);
-            alert("Error occurred, check the server logs");
+            const errorMessage = error.response?.data?.message || "Terjadi kesalahan.";
+            setAlert({
+                message: errorMessage,
+                variant: "error",
+            });
+        } finally {
+            setTimeout(() => {
+                setAlert({ message: "", variant: "" });
+            }, 3000);
         }
     };
 
     return (
         <Card className="max-w-md mx-auto shadow-none border-none">
+            {alert.message && (
+                <Alert className={`mt-7 p-4 rounded-md ${alert.variant === "success"
+                    ? "bg-green-100 border-green-300 text-green-700"
+                    : "bg-red-100 border-red-300 text-red-700"
+                    }`}>
+                    <AlertTitle>{alert.variant === "success" ? "Berhasil" : "Gagal"}</AlertTitle>
+                    <AlertDescription>{alert.message}</AlertDescription>
+                </Alert>
+            )}
             <CardHeader className="p-4">
-                <h2 className="text-lg font-semibold text-gray-800">
-                    Tambah {title}
-                </h2>
+                <h2 className="text-lg font-semibold text-hijau">Tambah {title}</h2>
                 <p className="text-sm text-gray-600">
                     Pastikan data yang Anda masukkan sudah benar.
                 </p>
             </CardHeader>
             <form onSubmit={handleSubmit}>
                 <CardContent className="space-y-4 p-4">
-                    <div>
-                        <Label htmlFor="name">Nama {title}</Label>
-                        <Input
-                            id="name"
-                            name="name"
-                            placeholder={`Masukkan Nama ${title}`}
-                            value={formData.name}
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="web_url">Alamat Website {title}</Label>
-                        <Input
-                            id="website_url"
-                            name="website_url"
-                            placeholder="Masukkan alamat website jika tersedia"
-                            value={formData.web_url}
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="image">Logo {title}</Label>
-                        <Input
-                            id="image"
-                            name="image"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                    {fields.map((field, index) => (
+                        <div key={index} className="flex flex-col space-y-1">
+                            <Label htmlFor={field.name}>{field.label}</Label>
+                            {field.type === "select" ? (
+                                <select
+                                    id={field.name}
+                                    name={field.name}
+                                    className="form-select w-full border rounded-md p-2"
+                                    value={formData[field.name]}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="">Pilih {field.label}</option>
+                                    {field.options.map((option, idx) => (
+                                        <option key={idx} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            ) : (
+                                <Input
+                                    id={field.name}
+                                    name={field.name}
+                                    placeholder={field.placeholder || `Masukkan ${field.label}`}
+                                    type={field.type || "text"}
+                                    accept={field.accept}
+                                    value={field.type === "file" ? undefined : formData[field.name]}
+                                    onChange={handleInputChange}
+                                    className="border rounded-md p-2"
+                                />
+                            )}
+                        </div>
+                    ))}
                 </CardContent>
                 <CardFooter className="p-4">
-                    <Button type="submit" className="w-full">
+                    <Button
+                        type="submit"
+                        className="w-full bg-hijau hover:bg-green-500 hover:text-white"
+                    >
                         Submit
                     </Button>
                 </CardFooter>

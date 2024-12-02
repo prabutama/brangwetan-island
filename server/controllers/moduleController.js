@@ -41,7 +41,7 @@ exports.createModule = [
         const { title, description, type, content } = req.body;
 
         if (!title || !description || !type) {
-            return res.status(400).json({ message: "Title, description, and type are required" });
+            return res.status(400).json({ message: "title, description, and type are required" });
         }
 
         try {

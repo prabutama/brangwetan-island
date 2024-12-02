@@ -3,10 +3,10 @@ import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import { Collaborators } from '@/components/Collaborators'
 import EBTExplanation from '@/components/EBTExplanation'
-import EBTImplementation from '@/components/EBTImplementation'
 import Footer from '@/components/Footer'
-import Module from '@/components/Module'
+import Module from '@/components/ModuleWithVideo'
 import { Gallery } from '@/components/Gallery'
+import ModuleWithImage from '@/components/ModuleWithImage'
 
 
 export default function Home(showNavbar = false) {
@@ -18,7 +18,7 @@ export default function Home(showNavbar = false) {
             <Hero />
             <Collaborators />
             <EBTExplanation />
-            <EBTImplementation />
+            <ModuleWithImage />           
             <Module
                 src="https://docs.material-tailwind.com/demo.mp4"
                 poster="https://www.example.com/poster.jpg"

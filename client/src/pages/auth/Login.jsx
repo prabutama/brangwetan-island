@@ -62,7 +62,7 @@ export function Login() {
             <div className="flex items-center justify-center min-h-screen bg-gray-200">
                 <Card className="w-full max-w-sm p-6 space-y-6 bg-white shadow-lg rounded-xl">
                     <div className="text-center">
-                        <h2 className="text-3xl font-bold text-black font-poppins">Login</h2>
+                        <h2 className="text-3xl font-bold text-hijau font-poppins">Login</h2>
                         <p className="mt-2 text-slate-600 font-poppins">Gunakan akun administrator untuk login dan kelola website dengan bijak</p>
                     </div>
                     {alert.message && (
@@ -111,7 +111,7 @@ export function Login() {
 
                         {/* Submit Button */}
                         <div>
-                            <Button type="submit" className="w-full bg-black text-white hover:bg-gray-900 font-poppins" disabled={loading}>
+                            <Button type="submit" className="w-full bg-hijau text-white hover:bg-green-600 font-poppins" disabled={loading}>
                                 {loading ? "Logging in..." : "Login"}
                             </Button>
                         </div>
