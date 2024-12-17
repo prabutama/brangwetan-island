@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: "image", 
         },
         content: {
-            type: DataTypes.STRING(255), // Menyimpan path gambar atau URL video
-            allowNull: false, // Isi konten, bisa berupa URL atau path file
+            type: DataTypes.STRING(255),
+            allowNull: false,
         },
     }, {
         tableName: "modules",

@@ -12,6 +12,6 @@ router.get("/:id", getModuleById);
 
 router.put("/:id", authenticateToken, updateModule);
 
-router.delete("/:id", authenticateToken, checkRole("token"), deleteModule);
+router.delete("/:id", authenticateToken, checkRole("admin"), deleteModule);
 
 module.exports = router;

@@ -8,24 +8,37 @@ import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, D
 
 const Navbar = () => {
     const [navOpen, setNavOpen] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);  // State to handle the dialog visibility
+    const [openDialog, setOpenDialog] = useState(false); // State to handle the dialog visibility
     const { user, logout } = useAuth();
+
+    const scrollToEbtExplanation = () => {
+        const element = document.getElementById('ebt-explanation');
+        if (element) {
+            const rect = element.getBoundingClientRect();
+            const isMobile = window.innerWidth < 768;
+            const offset = isMobile ? -60 : -100;
+            window.scrollTo({
+                top: rect.top + window.scrollY + offset,
+                behavior: 'smooth',
+            });
+        }
+    };
 
     const menu = [
         { name: "Beranda", href: "/", icon: Home },
-        { name: "Modul", href: "#", icon: BookOpen },
+        { name: "Modul", href: "#modul", icon: BookOpen, action: scrollToEbtExplanation }, // Tambahkan action
     ];
 
     return (
-        <nav className="bg-hijau py-4 px-6 fixed w-full top-0 z-50 transition-all duration-300 ease-in-out rounded-b-lg">
+        <nav className="bg-gradient-to-r from-green-500 via-green-500 to-yellow-500 py-4 px-6 fixed w-full top-0 z-50 transition-all duration-300 ease-in-out rounded-b-lg">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex gap-2 items-center">
-                    <img
-                        src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+                    {/* <img
+                        src="/img/randuboto.png"
                         alt="logo"
                         width="50"
                         className="text-white"
-                    />
+                    /> */}
                     <p className="text-white text-xl font-normal font-poppins">
                         Brangwetan Island
                     </p>
@@ -51,7 +64,8 @@ const Navbar = () => {
                     {menu.map((item, index) => (
                         <a
                             key={index}
-                            href={item.href}
+                            href={item.href || "#"}
+                            onClick={item.action || null}
                             className="text-white text-lg font-semibold transition-colors duration-300"
                         >
                             {item.name}
@@ -61,34 +75,32 @@ const Navbar = () => {
 
                 {/* Tombol Login / User */}
                 <div className="hidden sm:block">
-                    {
-                        user ? (
-                            // Dropdown untuk Logout di Desktop
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <div className="flex items-center space-x-2 cursor-pointer">
-                                        <User size={24} className="text-white" />
-                                        <p className="text-white text-lg">{user.name}</p>
-                                    </div>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="bg-white text-gray-800 rounded-lg shadow-lg p-2">
-                                    <DropdownMenuItem
-                                        onClick={() => setOpenDialog(true)} // Show dialog on logout
-                                        className="flex items-center space-x-2 hover:bg-indigo-100"
-                                    >
-                                        <LogOut size={20} />
-                                        <span>Logout</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        ) : (
-                            <Button className="bg-white text-hijau text-sm py-3 px-6 rounded-lg hover:bg-gray-100">
-                                <Link to="/login">
-                                    Login sebagai Admin
-                                </Link>
-                            </Button>
-                        )
-                    }
+                    {user ? (
+                        // Dropdown untuk Logout di Desktop
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <div className="flex items-center space-x-2 cursor-pointer">
+                                    <User size={24} className="text-white" />
+                                    <p className="text-white text-lg">{user.name}</p>
+                                </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="bg-white text-gray-800 rounded-lg shadow-lg p-2">
+                                <DropdownMenuItem
+                                    onClick={() => setOpenDialog(true)} // Show dialog on logout
+                                    className="flex items-center space-x-2 hover:bg-indigo-100"
+                                >
+                                    <LogOut size={20} />
+                                    <span>Logout</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Button className="bg-white text-hijau text-sm py-3 px-6 rounded-lg hover:bg-gray-100">
+                            <Link to="/login">
+                                Login sebagai Admin
+                            </Link>
+                        </Button>
+                    )}
                 </div>
             </div>
 
@@ -106,7 +118,8 @@ const Navbar = () => {
                             {menu.map((item, index) => (
                                 <a
                                     key={index}
-                                    href={item.href}
+                                    href={item.href || "#"}
+                                    onClick={item.action || null} // Gunakan action jika ada
                                     className="text-gray-800 text-lg flex flex-col items-center justify-center hover:text-indigo-500"
                                 >
                                     <item.icon size={24} />
@@ -135,7 +148,7 @@ const Navbar = () => {
                                     </DropdownMenu>
                                 </div>
                             ) : (
-                                <Button className="bg-hijau text-white text-sm py-3 px-6 rounded-lg">
+                                <Button className="bg-hijau text-white text-sm py-3 px-6 rounded-lg hover:bg-hijau">
                                     <Link to="/login">
                                         Login sebagai Admin
                                     </Link>
@@ -148,20 +161,20 @@ const Navbar = () => {
 
             {/* Dialog Konfirmasi Logout */}
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogContent className="bg-white text-gray-800 rounded-lg shadow-lg p-4 w-[90%`] sm:w-full">
+                <DialogContent className="bg-white text-hijau rounded-lg shadow-lg p-4 max-w-[90%] lg:w-1/2 ">
                     <DialogTitle>Konfirmasi Logout</DialogTitle>
                     <DialogDescription>
                         Apakah Anda yakin ingin logout?
                     </DialogDescription>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setOpenDialog(false)}>
+                        <Button variant="outline" className="hover:text-hijau" onClick={() => setOpenDialog(false)}>
                             Batal
                         </Button>
                         <Button
-                            className="ml-2"
+                            className="bg-hijau hover:bg-green-600 hover:text-white mb-2"
                             onClick={() => {
                                 logout();
-                                setOpenDialog(false); // Close the dialog after logout
+                                setOpenDialog(false);
                             }}
                         >
                             Logout

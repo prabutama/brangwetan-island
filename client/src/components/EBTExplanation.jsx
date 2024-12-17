@@ -1,30 +1,202 @@
-import React from 'react';
+"use client"
+
+import React from 'react'
+import { motion } from 'framer-motion'
+import { ArrowRight, Sun, Wind, Zap } from 'lucide-react'
 
 const EBTExplanation = () => {
     return (
-        <div className="w-full px-6 py-12">
-            <div className="mx-auto flex flex-col lg:flex-row-reverse items-center justify-center max-w-screen-xl">
+        <div id="ebt-explanation" className="w-full bg-gradient-to-t from-green-50 via-white to-white relative overflow-hidden">
+            {/* Decorative elements */}
+            <motion.div
+                className="absolute lg:top-20 lg:left-20 left-10 top-[6rem] text-yellow-400 opacity-70"
+                animate={{
+                    rotate: 360,
+                    scale: [4.5, 4.3, 4.5],
+                }}
+                transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "linear"
+                }}
+            >
+                <Sun size={24} className='w-2 lg:w-32' />
+            </motion.div>
+            <motion.div
+                className="absolute lg:top-10 top-4 right-20 lg:right-16 text-blue-400 opacity-70"
+                animate={{
+                    x: [-8, 8, -8],
+                    y: [-4, 4, -4],
+                    scale: [2, 2.3, 2],
+                }}
+                transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            >
+                <Wind size={20} className='w-2 lg:w-20' />
+            </motion.div>
+
+            <motion.div
+                className="absolute lg:top-32 top-12 lg:right-32 right-4 text-blue-400 opacity-70"
+                animate={{
+                    x: [-8, 8, -8],
+                    y: [-4, 4, -4],
+                    scale: [2, 1.8, 2],
+                }}
+                transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            >
+                <Wind size={20} className='w-4 lg:w-24' />
+            </motion.div>
+
+            <motion.div
+                className="absolute lg:bottom-32 lg:left-20 bottom-10 left-6 text-green-400 opacity-70"
+                animate={{
+                    scale: [2.5, 2, 2.5],
+                }}
+                transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            >
+                <Zap size={18} className='w-5 lg:w-10' />
+            </motion.div>
+
+            <motion.div
+                className="absolute lg:bottom-60 lg:left-32 bottom-14 left-24 text-green-400 opacity-70"
+                animate={{
+                    scale: [2, 1.5, 2],
+                }}
+                transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            >
+                <Zap size={18} className='w-3 lg:w-16' />
+            </motion.div>
+
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex flex-col lg:flex-row items-center justify-between relative z-10">
                 {/* Text Section */}
-                <div className="w-full lg:w-1/2 mb-8 lg:mb-0">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-hijau text-center lg:text-left">
-                        Apa itu <br /> Energi Baru Terbarukan?
-                    </h1>
-                    <p className="text-center lg:text-left text-gray-500 text-sm md:text-base mt-3 lg:w-3/4 sm:w-3/4">
-                        Energi baru dan terbarukan merupakan pengelolaan energi dan proses alam yang berkelanjutan dan dijadikan sebagai energi alternatif serta bersifat ramah lingkungan sehingga berkontribusi dalam mengatasi pemanasan global dan mengurangi emisi karbon dioksida.
-                    </p>
-                </div>
+                <motion.div
+                    className="w-full lg:w-3/4 mb-8 lg:mb-0 text-left"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                >
+                    <motion.h1
+                        className="mb-2 lg:mb-6 text-3xl tracking-tight font-bold text-left sm:text-5xl lg:text-5xl"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.8 }}
+                    >
+                        <motion.span
+                            className="block text-green-600"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.4, duration: 0.8 }}
+                        >
+                            Apa itu
+                        </motion.span>
+                        <motion.span
+                            className="block bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-yellow-400"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.6, duration: 0.8 }}
+                        >
+                            Energi Baru Terbarukan?
+                        </motion.span>
+                    </motion.h1>
+                    <motion.p
+                        className="mb-3 text-[17px] text-slate-500 lg:text-xl text-justify lg:text-left tracking-tight"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                    >
+                        Energi Baru dan Terbarukan atau yang disingkat EBT adalah sumber energi yang berasal dari proses alam yang berkelanjutan dan dapat diperbaharui secara alami sehingga menjadi masa depan energi yang lebih bersih dan berkelanjutan. Dengan memanfaatkan kekayaan alam yang ada, kita bisa memenuhi kebutuhan energi tanpa merusak lingkungan.
+                    </motion.p>
+                </motion.div>
 
                 {/* Image Section */}
-                <div className="w-full lg:w-1/2 flex items-center justify-center">
-                    <img
-                        src="/img/renewable-energy.png"
-                        className="w-full h-auto rounded-md object-contain"
-                        alt="Renewable Energy"
-                    />
-                </div>
+                <motion.div
+                    className="w-full lg:w-1/2 flex items-center justify-center"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                    <div className="relative w-full max-w-sm sm:max-w-md aspect-square -mt-20 lg:mt-0">
+                        <motion.div
+                            className="absolute inset-0"
+                            animate={{
+                                y: [0, -10, 0],
+                                rotate: [0, 3, 0]
+                            }}
+                            transition={{
+                                duration: 6,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                        >
+                            <img
+                                src="/img/renewable-energy.png"
+                                alt="Renewable Energy Mascot"
+                                className="w-full h-full object-contain sm scale-110"
+                            />
+                        </motion.div>
+
+                        {/* Decorative circles */}
+                        <motion.div
+                            className="absolute -top-5 -left-5 w-20 h-20 sm:w-24 sm:h-24 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+                            animate={{
+                                scale: [1, 1.2, 1],
+                                opacity: [0.7, 0.5, 0.7],
+                            }}
+                            transition={{
+                                duration: 8,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                        />
+                        <motion.div
+                            className="absolute -bottom-5 -right-5 w-20 h-20 sm:w-24 sm:h-24 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+                            animate={{
+                                scale: [1, 1.2, 1],
+                                opacity: [0.7, 0.5, 0.7],
+                            }}
+                            transition={{
+                                duration: 8,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                                delay: 1
+                            }}
+                        />
+                    </div>
+                </motion.div>
+            </div>
+
+            <div className="absolute inset-0">
+                <svg
+                    className="absolute bottom-0 left-0 right-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 1440 280"
+                >
+                    <motion.path
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 0.1 }}
+                        transition={{ duration: 2, ease: "easeInOut" }}
+                        fill="#4ade80"
+                        d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,224C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+                    ></motion.path>
+                </svg>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default EBTExplanation;
+export default EBTExplanation

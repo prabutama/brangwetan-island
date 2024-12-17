@@ -67,7 +67,7 @@ export function Login() {
                     </div>
                     {alert.message && (
                         <Alert
-                            className="mt-4"
+                            className={`mt-4 ${alert.variant === "success" ? "bg-green-200" : "bg-red-200"}`} 
                             variant={alert.variant === "success" ? "success" : "error"}
                         >
                             <AlertTitle>

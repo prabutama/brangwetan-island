@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Trash, X } from "lucide-react";
-import { AddForm } from "./AddForm";
+import { Form } from "./Form";
 import { useAuth } from "@/context/AuthContext";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { motion } from 'framer-motion'
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 
 export const Collaborators = () => {
     const [collaborators, setCollaborators] = useState([]);
@@ -56,7 +57,7 @@ export const Collaborators = () => {
     };
 
     const handleCloseDialog = () => {
-        setIsDialogOpen(false);  
+        setIsDialogOpen(false);
         setConfirmDeleteId(null);
     };
 
@@ -69,22 +70,51 @@ export const Collaborators = () => {
     }
 
     return (
-        <div className="relative w-full h-auto pt-10 bg-white">
-            <p className="text-center text-2xl md:text-3xl font-bold text-hijau">Kolaborator Kami</p>
-            <p className="text-center text-gray-500 text-sm md:text-base mt-3 lg:w-2/5 sm:w-3/4 mx-auto px-10">Platform pembelajaran ini adalah hasil kolaborasi yang apik dari beberapa pihak yang berdedikasi dan berkomitmen untuk memberikan pengetahuan tentang Energi Baru Terbarukan</p>
+        <div className="relative w-full h-auto py-10 bg-gradient-to-b from-green-50 to-white">
+            <motion.h1
+                className="mb-2 lg:mb-6 text-3xl tracking-tight font-bold sm:text-5xl lg:text-6xl flex gap-3 justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+            >
+                <motion.span
+                    className="block text-green-600"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4, duration: 0.8 }}
+                >
+                    Kolaborator
+                </motion.span>
+                <motion.span
+                    className="block bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-yellow-400"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6, duration: 0.8 }}
+                >
+                    Kami
+                </motion.span>
+            </motion.h1>
+            <motion.p
+                className="mb-3 lg:mb-6 text-[17px] text-slate-500 lg:text-xl text-center tracking-tight w-full lg:w-[50%] mx-auto px-3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.8 }}
+            >
+                Platform pembelajaran ini adalah hasil kolaborasi yang apik dari beberapa pihak yang berdedikasi dan berkomitmen untuk memberikan pengetahuan tentang Energi Baru Terbarukan
+            </motion.p>
             <div className="mt-5 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-6 justify-center lg:border-2 lg:border-hijau rounded-full py-10 lg:w-[50%] mx-auto lg:shadow-md">
                 {Array.isArray(collaborators) && collaborators.map((collaborator) => (
                     <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex justify-center items-center mx-auto">
                         {
                             user && user.role === "admin" ? (
-                                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                <Dialog>
                                     <DialogTrigger>
                                         <Button
                                             onClick={() => {
                                                 setConfirmDeleteId(collaborator.id);
                                                 setIsDialogOpen(true); // Open dialog on delete button click
                                             }}
-                                            className="absolute z-30 -top-2 -right-2 bg-black text-white p-2 rounded-full hover:bg-red-600"
+                                            className="absolute z-30 -top-2 -right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
                                         >
                                             <Trash className="w-4 h-4" />
                                         </Button>
@@ -95,10 +125,12 @@ export const Collaborators = () => {
                                             Apakah Anda yakin ingin menghapus kolaborator ini?
                                         </DialogDescription>
                                         <DialogFooter>
-                                            <Button variant="outline" onClick={handleCloseDialog}>
-                                                Batal
-                                            </Button>
-                                            <Button className="bg-black" onClick={deleteCollaborator}>
+                                            <DialogClose>
+                                                <Button variant="outline" onClick={handleCloseDialog}>
+                                                    Batal
+                                                </Button>
+                                            </DialogClose>
+                                            <Button className="bg-red-500" onClick={deleteCollaborator}>
                                                 Hapus
                                             </Button>
                                         </DialogFooter>
@@ -120,16 +152,6 @@ export const Collaborators = () => {
                                 className="w-full h-full object-contain rounded-full transition-all duration-300 hover:grayscale-0"
                                 src={`http://localhost:3000${collaborator.image}`}
                                 alt={collaborator.name}
-                                style={{
-                                    filter: "grayscale(1) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
-                                    transition: "filter 0.3s ease",
-                                }}
-                                onMouseEnter={(e) =>
-                                    (e.currentTarget.style.filter = "grayscale(0) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))")
-                                }
-                                onMouseLeave={(e) =>
-                                    (e.currentTarget.style.filter = "grayscale(1) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))")
-                                }
                             />
                         </a>
                     </div>
@@ -145,7 +167,7 @@ export const Collaborators = () => {
                         onClick={handleToggleForm}
                         className="h-6 w-6 text-black absolute right-4 top-4 cursor-pointer"
                     />
-                    <AddForm
+                    <Form
                         title="Collaborator"
                         api="http://localhost:3000/api/collaborator"
                         fields={[
@@ -155,7 +177,7 @@ export const Collaborators = () => {
                                 placeholder: "Masukkan Nama Collaborator",
                             },
                             {
-                                name: "website_url",
+                                name: "website_link",
                                 label: "Alamat Website Collaborator",
                                 placeholder: "Masukkan alamat website jika tersedia",
                             },

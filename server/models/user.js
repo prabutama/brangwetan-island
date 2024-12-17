@@ -28,13 +28,5 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: true,
     });
 
-    User.associate = function (models) {
-        User.hasMany(models.Post, {
-            foreignKey: "user_id",
-            as: "posts", 
-            onDelete: "CASCADE",
-        });
-    };
-
     return User;
 };

@@ -39,6 +39,7 @@ exports.createModule = [
     upload.single('content'),
     async (req, res) => {
         const { title, description, type, content } = req.body;
+        console.log("Request Body:", req.body);
 
         if (!title || !description || !type) {
             return res.status(400).json({ message: "title, description, and type are required" });
@@ -98,12 +99,13 @@ exports.getModuleById = async (req, res) => {
 exports.updateModule = async (req, res) => {
     const moduleId = req.params.id;
     const { title, description } = req.body;
+    console.log("Request Body:", req.body);
     try {
         const module = await Module.findByPk(moduleId);
         if (!module) {
             return res.status(404).json({ message: "Module not found" });
         }
-
+        
         module.title = title;
         module.description = description;
 
