@@ -1,86 +1,55 @@
 "use client"
 
-import React from 'react'
-import { motion } from 'framer-motion'
-import { ArrowRight, Sun, Wind, Zap } from 'lucide-react'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Sun, Wind, Zap } from 'lucide-react';
+
+const decorativeElements = [
+    {
+        className: "absolute lg:top-20 sm:top-72 lg:left-20 left-10 top-1 text-yellow-400 opacity-70",
+        animation: { rotate: 360, scale: [4.5, 4.3, 4.5] },
+        transition: { duration: 10, repeat: Infinity, ease: "linear" },
+        icon: <Sun size={24} className="w-2 lg:w-32" />
+    },
+    {
+        className: "absolute lg:top-10 top-4 right-20 lg:right-16 text-blue-400 opacity-70",
+        animation: { x: [-8, 8, -8], y: [-4, 4, -4], scale: [2, 2.3, 2] },
+        transition: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+        icon: <Wind size={20} className="w-2 lg:w-20" />
+    },
+    {
+        className: "absolute lg:top-32 top-12 lg:right-32 right-4 text-blue-400 opacity-70",
+        animation: { x: [-8, 8, -8], y: [-4, 4, -4], scale: [2, 1.8, 2] },
+        transition: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+        icon: <Wind size={20} className="w-4 lg:w-24" />
+    },
+    {
+        className: "absolute lg:bottom-32 lg:left-20 bottom-10 left-6 text-green-400 opacity-70",
+        animation: { scale: [2.5, 2, 2.5] },
+        transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+        icon: <Zap size={18} className="w-5 lg:w-10" />
+    },
+    {
+        className: "absolute lg:bottom-60 lg:left-32 bottom-14 left-24 text-green-400 opacity-70",
+        animation: { scale: [2, 1.5, 2] },
+        transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+        icon: <Zap size={18} className="w-3 lg:w-16" />
+    }
+];
 
 const EBTExplanation = () => {
     return (
         <div id="ebt-explanation" className="w-full bg-gradient-to-t from-green-50 via-white to-white relative overflow-hidden">
-            {/* Decorative elements */}
-            <motion.div
-                className="absolute lg:top-20 lg:left-20 left-10 top-[6rem] text-yellow-400 opacity-70"
-                animate={{
-                    rotate: 360,
-                    scale: [4.5, 4.3, 4.5],
-                }}
-                transition={{
-                    duration: 10,
-                    repeat: Infinity,
-                    ease: "linear"
-                }}
-            >
-                <Sun size={24} className='w-2 lg:w-32' />
-            </motion.div>
-            <motion.div
-                className="absolute lg:top-10 top-4 right-20 lg:right-16 text-blue-400 opacity-70"
-                animate={{
-                    x: [-8, 8, -8],
-                    y: [-4, 4, -4],
-                    scale: [2, 2.3, 2],
-                }}
-                transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-            >
-                <Wind size={20} className='w-2 lg:w-20' />
-            </motion.div>
-
-            <motion.div
-                className="absolute lg:top-32 top-12 lg:right-32 right-4 text-blue-400 opacity-70"
-                animate={{
-                    x: [-8, 8, -8],
-                    y: [-4, 4, -4],
-                    scale: [2, 1.8, 2],
-                }}
-                transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-            >
-                <Wind size={20} className='w-4 lg:w-24' />
-            </motion.div>
-
-            <motion.div
-                className="absolute lg:bottom-32 lg:left-20 bottom-10 left-6 text-green-400 opacity-70"
-                animate={{
-                    scale: [2.5, 2, 2.5],
-                }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-            >
-                <Zap size={18} className='w-5 lg:w-10' />
-            </motion.div>
-
-            <motion.div
-                className="absolute lg:bottom-60 lg:left-32 bottom-14 left-24 text-green-400 opacity-70"
-                animate={{
-                    scale: [2, 1.5, 2],
-                }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-            >
-                <Zap size={18} className='w-3 lg:w-16' />
-            </motion.div>
+            {decorativeElements.map((element, index) => (
+                <motion.div
+                    key={index}
+                    className={element.className}
+                    animate={element.animation}
+                    transition={element.transition}
+                >
+                    {element.icon}
+                </motion.div>
+            ))}
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex flex-col lg:flex-row items-center justify-between relative z-10">
                 {/* Text Section */}
@@ -133,15 +102,8 @@ const EBTExplanation = () => {
                     <div className="relative w-full max-w-sm sm:max-w-md aspect-square -mt-20 lg:mt-0">
                         <motion.div
                             className="absolute inset-0"
-                            animate={{
-                                y: [0, -10, 0],
-                                rotate: [0, 3, 0]
-                            }}
-                            transition={{
-                                duration: 6,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
+                            animate={{ y: [0, -10, 0], rotate: [0, 3, 0] }}
+                            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                         >
                             <img
                                 src="/img/renewable-energy.png"
@@ -151,31 +113,15 @@ const EBTExplanation = () => {
                         </motion.div>
 
                         {/* Decorative circles */}
-                        <motion.div
-                            className="absolute -top-5 -left-5 w-20 h-20 sm:w-24 sm:h-24 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.7, 0.5, 0.7],
-                            }}
-                            transition={{
-                                duration: 8,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
-                        />
-                        <motion.div
-                            className="absolute -bottom-5 -right-5 w-20 h-20 sm:w-24 sm:h-24 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.7, 0.5, 0.7],
-                            }}
-                            transition={{
-                                duration: 8,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                                delay: 1
-                            }}
-                        />
+                        {["bg-yellow-200", "bg-green-200"].map((color, idx) => (
+                            <motion.div
+                                key={idx}
+                                className={`absolute w-20 h-20 sm:w-24 sm:h-24 ${color} rounded-full mix-blend-multiply filter blur-xl opacity-70`}
+                                style={{ top: idx === 0 ? "-5%" : "auto", bottom: idx === 1 ? "-5%" : "auto", left: idx === 0 ? "-5%" : "auto", right: idx === 1 ? "-5%" : "auto" }}
+                                animate={{ scale: [1, 1.2, 1], opacity: [0.7, 0.5, 0.7] }}
+                                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: idx }}
+                            />
+                        ))}
                     </div>
                 </motion.div>
             </div>
@@ -196,7 +142,7 @@ const EBTExplanation = () => {
                 </svg>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default EBTExplanation
+export default EBTExplanation;

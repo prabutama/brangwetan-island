@@ -5,17 +5,32 @@ import { Form } from "./Form";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import {
+    Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose
+} from "@/components/ui/dialog";
 
-function ModuleWithImage() {
+const ModuleWithImage = () => {
     const [modules, setModules] = useState([]);
     const [error, setError] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [editModule, setEditModule] = useState(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const user = useAuth().user;
+    const { user } = useAuth();
     const token = localStorage.getItem("token");
+
+    const fetchModules = async () => {
+        setIsLoading(true);
+        try {
+            const { data } = await axios.get("http://localhost:3000/api/module");
+            const filteredModules = data.modules.filter((module) => module.type === "image");
+            setModules(filteredModules);
+        } catch (err) {
+            setError(err.response?.data?.message || err.message || "Failed to fetch modules");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleToggleForm = () => {
         setShowForm((prev) => !prev);
@@ -44,18 +59,6 @@ function ModuleWithImage() {
     };
 
     useEffect(() => {
-        const fetchModules = async () => {
-            setIsLoading(true);
-            try {
-                const response = await axios.get("http://localhost:3000/api/module");
-                const filteredModules = response.data.modules.filter((module) => module.type === "image");
-                setModules(filteredModules);
-            } catch (err) {
-                setError(err.response?.data?.message || err.message || "Failed to fetch modules");
-            } finally {
-                setIsLoading(false);
-            }
-        };
         fetchModules();
     }, [showForm]);
 
@@ -103,6 +106,7 @@ function ModuleWithImage() {
                     Penerapan EBT melibatkan proses mengubah sumber energi alami yang berkelanjutan menjadi energi yang dapat kita manfaatkan dalam kehidupan sehari-hari, terutama dalam bentuk listrik. Penerapan ini bisa dilakukan dalam skala besar maupun kecil, baik oleh pemerintah, perusahaan, maupun individu.
                 </motion.p>
             </motion.div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {isLoading
                     ? Array.from({ length: 4 }).map((_, index) => (
@@ -132,7 +136,7 @@ function ModuleWithImage() {
                                     alt={module.title}
                                     className="w-full h-full object-cover"
                                 />
-                                {user && user.role === "admin" && (
+                                {user?.role === "admin" && (
                                     <div className="absolute top-2 right-2 flex space-x-2">
                                         <Button
                                             className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600"
@@ -188,34 +192,20 @@ function ModuleWithImage() {
                             title={editModule ? "Edit Modul" : "Tambah Modul"}
                             api={`http://localhost:3000/api/module${editModule ? `/${editModule.id}` : ""}`}
                             method={editModule ? "PUT" : "POST"}
-                            initialValues={
-                                editModule || {
-                                    title: "",
-                                    description: "",
-                                    type: "image",
-                                    content: null,
-                                }
-                            }
+                            initialValues={editModule || { title: "", description: "", type: "image", content: null }}
                             fields={[
                                 { name: "title", label: "Judul", placeholder: "Masukkan Judul Modul" },
                                 { name: "description", label: "Deskripsi", placeholder: "Masukkan deskripsi", type: "textarea" },
-                                ...(editModule
-                                    ? []
-                                    : [
-                                        {
-                                            name: "content",
-                                            label: "Konten",
-                                            type: "file",
-                                            accept: "image/*,video/*",
-                                        },
-                                    ]),
+                                ...(editModule ? [] : [
+                                    { name: "content", label: "Konten", type: "file", accept: "image/*,video/*" }
+                                ]),
                             ]}
                         />
                     </div>
                 </div>
             )}
 
-            {user && user.role === "admin" && (
+            {user?.role === "admin" && (
                 <div className="w-full flex justify-center items-center mt-12">
                     <Button
                         onClick={handleToggleForm}
@@ -227,6 +217,6 @@ function ModuleWithImage() {
             )}
         </div>
     );
-}
+};
 
 export default ModuleWithImage;

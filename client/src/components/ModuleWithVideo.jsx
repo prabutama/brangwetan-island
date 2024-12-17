@@ -1,11 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Pencil, Trash, X } from 'lucide-react';
 import { Form } from "./Form";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    DialogClose
+} from "@/components/ui/dialog";
 
 function ModuleWithVideo() {
     const [modules, setModules] = useState([]);
@@ -14,44 +22,44 @@ function ModuleWithVideo() {
     const [editModule, setEditModule] = useState(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const user = useAuth().user;
+    const { user } = useAuth();
     const token = localStorage.getItem("token");
 
-    const handleToggleForm = () => {
+    // Toggle Form Display
+    const handleToggleForm = useCallback(() => {
         setShowForm((prev) => !prev);
         setEditModule(null);
-    };
+    }, []);
 
+    // Set Module for Editing
     const handleEdit = (module) => {
         setEditModule(module);
         setShowForm(true);
     };
 
-    const deleteModule = async () => {
+    // Delete Module
+    const deleteModule = useCallback(async () => {
         if (confirmDeleteId === null) return;
-
         try {
             await axios.delete(`http://localhost:3000/api/module/${confirmDeleteId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
             setModules((prev) => prev.filter((module) => module.id !== confirmDeleteId));
             setConfirmDeleteId(null);
         } catch (err) {
-            console.error("Error deleting module:", err);
+            setError(err?.response?.data?.message || err.message || "Error deleting module");
         }
-    };
+    }, [confirmDeleteId, token]);
 
+    // Fetch Modules on Component Mount and Form Toggle
     useEffect(() => {
         const fetchModules = async () => {
             setIsLoading(true);
             try {
                 const response = await axios.get("http://localhost:3000/api/module");
-                const filteredModules = response.data.modules.filter((module) => module.type === "video");
-                setModules(filteredModules);
+                setModules(response.data.modules.filter((module) => module.type === "video"));
             } catch (err) {
-                setError(err.response?.data?.message || err.message || "Failed to fetch modules");
+                setError(err?.response?.data?.message || err.message || "Failed to fetch modules");
             } finally {
                 setIsLoading(false);
             }
@@ -59,9 +67,89 @@ function ModuleWithVideo() {
         fetchModules();
     }, [showForm]);
 
-    if (error) {
-        return <p className="text-red-500">Error: {error}</p>;
-    }
+    // Render Loading State
+    const renderLoading = () => (
+        Array.from({ length: 4 }).map((_, index) => (
+            <motion.div
+                key={index}
+                className="bg-gray-100 rounded-xl shadow-lg overflow-hidden animate-pulse h-72 flex flex-col"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+            >
+                <div className="aspect-video bg-gray-300"></div>
+                <div className="p-4 space-y-2">
+                    <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                </div>
+            </motion.div>
+        ))
+    );
+
+    // Render Modules
+    const renderModules = () => (
+        modules.map((module) => (
+            <motion.div
+                key={module.id}
+                className="bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transition-shadow duration-300 flex flex-col"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="relative w-full h-72 group">
+                    <iframe
+                        src={`${module.content}`}
+                        allowFullScreen
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    ></iframe>
+                    {user?.role === "admin" && renderAdminControls(module)}
+                </div>
+                <div className="p-6 flex-grow">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-3">{module.title}</h3>
+                    <p className="text-gray-600 text-sm">{module.description}</p>
+                </div>
+            </motion.div>
+        ))
+    );
+
+    // Render Admin Controls
+    const renderAdminControls = (module) => (
+        <div className="absolute top-3 right-3 flex space-x-2">
+            <Button
+                className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full"
+                onClick={() => handleEdit(module)}
+            >
+                <Pencil className="w-4 h-4" />
+            </Button>
+            <Dialog>
+                <DialogTrigger>
+                    <Button
+                        className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full"
+                        onClick={() => setConfirmDeleteId(module.id)}
+                    >
+                        <Trash className="w-4 h-4" />
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogTitle>Konfirmasi Penghapusan</DialogTitle>
+                    <DialogDescription>
+                        Apakah Anda yakin ingin menghapus modul ini?
+                    </DialogDescription>
+                    <DialogFooter>
+                        <DialogClose>
+                            <Button variant="outline">Batal</Button>
+                        </DialogClose>
+                        <Button className="bg-red-600 hover:bg-red-700" onClick={deleteModule}>
+                            Hapus
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </div>
+    );
+
+    // Handle Error State
+    const renderError = () => <p className="text-red-500">Error: {error}</p>;
 
     return (
         <div className="w-full px-4 md:px-8 lg:px-16 py-12 bg-gradient-to-t from-green-50 to-white">
@@ -89,79 +177,8 @@ function ModuleWithVideo() {
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
-                {isLoading
-                    ? Array.from({ length: 4 }).map((_, index) => (
-                        <motion.div
-                            key={index}
-                            className="bg-gray-100 rounded-xl shadow-lg overflow-hidden animate-pulse h-72 flex flex-col"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            <div className="aspect-video bg-gray-300"></div>
-                            <div className="p-4 space-y-2">
-                                <div className="h-4 bg-gray-300 rounded w-2/3"></div>
-                                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                            </div>
-                        </motion.div>
-                    ))
-                    : modules.map((module) => (
-                        <motion.div
-                            key={module.id}
-                            className="bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transition-shadow duration-300 flex flex-col"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <div className="relative w-full h-72 group">
-                                <iframe
-                                    src={`${module.content}`}
-                                    allowFullScreen
-                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                ></iframe>
-                                {user && user.role === "admin" && (
-                                    <div className="absolute top-3 right-3 flex space-x-2">
-                                        <Button
-                                            className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full"
-                                            onClick={() => handleEdit(module)}
-                                        >
-                                            <Pencil className="w-4 h-4" />
-                                        </Button>
-                                        <Dialog>
-                                            <DialogTrigger>
-                                                <Button
-                                                    className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full"
-                                                    onClick={() => setConfirmDeleteId(module.id)}
-                                                >
-                                                    <Trash className="w-4 h-4" />
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent>
-                                                <DialogTitle>Konfirmasi Penghapusan</DialogTitle>
-                                                <DialogDescription>
-                                                    Apakah Anda yakin ingin menghapus modul ini?
-                                                </DialogDescription>
-                                                <DialogFooter>
-                                                    <DialogClose>
-                                                        <Button variant="outline">Batal</Button>
-                                                    </DialogClose>
-                                                    <Button className="bg-red-600 hover:bg-red-700" onClick={deleteModule}>
-                                                        Hapus
-                                                    </Button>
-                                                </DialogFooter>
-                                            </DialogContent>
-                                        </Dialog>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="p-6 flex-grow">
-                                <h3 className="text-xl font-semibold text-gray-800 mb-3">{module.title}</h3>
-                                <p className="text-gray-600 text-sm">{module.description}</p>
-                            </div>
-                        </motion.div>
-                    ))}
+                {isLoading ? renderLoading() : renderModules()}
             </div>
-
 
             {showForm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -187,20 +204,14 @@ function ModuleWithVideo() {
                                 { name: "description", label: "Deskripsi", placeholder: "Masukkan deskripsi", type: "textarea" },
                                 ...(editModule
                                     ? []
-                                    : [
-                                        {
-                                            name: "content",
-                                            label: "Konten",
-                                            type: "text",
-                                        },
-                                    ]),
+                                    : [{ name: "content", label: "Konten", type: "text" }]),
                             ]}
                         />
                     </div>
                 </div>
             )}
 
-            {user && user.role === "admin" && (
+            {user?.role === "admin" && (
                 <div className="w-full flex justify-center items-center mt-12">
                     <Button
                         onClick={handleToggleForm}

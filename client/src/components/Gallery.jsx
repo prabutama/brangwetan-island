@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
-import { Pencil, Trash, X } from "lucide-react";
+import { Trash, X } from "lucide-react";
 import { Form } from "./Form";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
 
 export function Gallery() {
     const [photos, setPhotos] = useState([]);
@@ -20,7 +26,7 @@ export function Gallery() {
         setConfirmDeleteId(null);
     };
 
-    // Ambil data foto dari API
+    // Fetch photos data from the API
     useEffect(() => {
         const fetchPhotos = async () => {
             try {
@@ -34,32 +40,33 @@ export function Gallery() {
         fetchPhotos();
     }, [showForm]);
 
-    // Tentukan jumlah item per slide berdasarkan lebar layar
+    // Determine number of items per slide based on screen width
     const itemsPerSlide = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
 
-    // Membagi foto menjadi slides
+    // Create slides by splitting photos into groups
     const slides = [];
     for (let i = 0; i < photos.length; i += itemsPerSlide) {
         slides.push(photos.slice(i, i + itemsPerSlide));
     }
 
-    // Fungsi untuk navigasi manual
+    // Navigate to the next slide
     const goToNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
     };
 
+    // Navigate to the previous slide
     const goToPrev = () => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
     };
 
-    // Auto-scroll dengan interval
+    // Auto-scroll with interval
     useEffect(() => {
-        const intervalId = setInterval(goToNext, 5000); // 3 detik per slide
+        const intervalId = setInterval(goToNext, 5000); // 5 seconds per slide
 
-        return () => clearInterval(intervalId); // Bersihkan interval saat komponen di-unmount
-    }, [slides.length]); // Depend on slides.length to reset interval if slides change
+        return () => clearInterval(intervalId); // Clear interval when component unmounts
+    }, [slides.length]);
 
-    // Fungsi untuk menghapus foto
+    // Delete photo
     const handleDeletePhoto = async (photoId) => {
         try {
             await axios.delete(`http://localhost:3000/api/photo/${photoId}`, {
@@ -68,21 +75,20 @@ export function Gallery() {
                 },
             });
 
-            // Hapus foto dari state
+            // Remove photo from state
             setPhotos((prevPhotos) => prevPhotos.filter((photo) => photo.id !== photoId));
-            setConfirmDeleteId(null); // Reset confirm delete state
+            setConfirmDeleteId(null); // Reset delete confirmation state
         } catch (error) {
             console.error("Error deleting photo:", error);
-            setError("Gagal menghapus foto.");
         }
     };
 
     return (
         <>
-            <div className="relative w-full max-w-8xl mx-auto p-4 lg:px-20 bg-gradient-to-b from-green-50 to-white">
-                {/* Container untuk slide */}
+            <div className="relative w-full max-w-8xl mx-auto p-4 lg:px-20">
+                {/* Container for the slides */}
                 <div className="relative overflow-hidden rounded-lg shadow-lg">
-                    {/* Wrapper untuk efek geser */}
+                    {/* Wrapper for the sliding effect */}
                     <div
                         className="flex transition-transform duration-700 ease-in-out"
                         style={{
@@ -106,16 +112,16 @@ export function Gallery() {
                                             flex: `0 0 calc(100% / ${itemsPerSlide})`,
                                         }}
                                     >
-                                        <div className="relative">
+                                        <div className="relative group">
                                             <img
                                                 src={`http://localhost:3000${item.photo_url}`}
                                                 alt={`Gallery Image ${slideIndex}-${index}`}
-                                                className="w-full h-[300px] lg:h-[400px] object-cover rounded-lg"
+                                                className="w-full h-[300px] lg:h-[400px] object-cover rounded-lg transition-transform duration-300 "
                                             />
                                             {user && user.role === "admin" && (
                                                 <button
-                                                    onClick={() => setConfirmDeleteId(item.id)} // Show confirmation dialog
-                                                    className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full"
+                                                    onClick={() => setConfirmDeleteId(item.id)}
+                                                    className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full transition-colors duration-200 hover:bg-red-700"
                                                 >
                                                     <Trash className="w-5 h-5" />
                                                 </button>
@@ -127,7 +133,7 @@ export function Gallery() {
                         ))}
                     </div>
 
-                    {/* Tombol Navigasi */}
+                    {/* Navigation buttons */}
                     <button
                         onClick={goToPrev}
                         className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full shadow-lg focus:outline-none"
@@ -142,7 +148,7 @@ export function Gallery() {
                     </button>
                 </div>
 
-                {/* Indikator */}
+                {/* Indicators */}
                 <div className="flex justify-center mt-4">
                     {slides.map((_, index) => (
                         <span
@@ -153,7 +159,7 @@ export function Gallery() {
                 </div>
             </div>
 
-            {/* Dialog Konfirmasi Penghapusan Foto */}
+            {/* Delete confirmation dialog */}
             {confirmDeleteId && (
                 <Dialog open={confirmDeleteId !== null} onOpenChange={() => setConfirmDeleteId(null)}>
                     <DialogContent>
@@ -169,13 +175,14 @@ export function Gallery() {
                                 onClick={() => handleDeletePhoto(confirmDeleteId)}
                                 className="bg-red-600 hover:bg-red-700"
                             >
-                                Hapus Foto
+                                Hapus
                             </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
             )}
 
+            {/* Form for adding new photo */}
             {showForm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="p-4 bg-white w-[85%] md:max-w-md rounded-lg shadow-lg relative">
@@ -184,7 +191,7 @@ export function Gallery() {
                             className="h-6 w-6 text-black absolute right-4 top-4 cursor-pointer"
                         />
                         <Form
-                            title="Tambah Foto"
+                            title="Foto"
                             api={`http://localhost:3000/api/photo`}
                             method="POST"
                             handleToggleForm={handleToggleForm}
@@ -194,6 +201,7 @@ export function Gallery() {
                 </div>
             )}
 
+            {/* Button to open the photo upload form (for admin) */}
             {user && user.role === "admin" && (
                 <div className="w-full flex justify-center items-center mt-4 mb-20">
                     <Button

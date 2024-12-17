@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
-import { Collaborators } from '@/components/Collaborators'
+import Collaborators from '@/components/Collaborators'
 import EBTExplanation from '@/components/EBTExplanation'
 import Footer from '@/components/Footer'
 
