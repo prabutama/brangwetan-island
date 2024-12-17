@@ -1,27 +1,25 @@
-import React from 'react'
-import Navbar from '@/components/Navbar'
-import Hero from '@/components/Hero'
-import Collaborators from '@/components/Collaborators'
-import EBTExplanation from '@/components/EBTExplanation'
-import Footer from '@/components/Footer'
+import { Gallery } from '@/components/Gallery';
+import ModuleWithImage from '@/components/ModuleWithImage';
+import ModuleWithVideo from '@/components/ModuleWithVideo';
+import React, { Suspense, lazy } from 'react';
 
-import { Gallery } from '@/components/Gallery'
-import ModuleWithImage from '@/components/ModuleWithImage'
-import ModuleWithVideo from '@/components/ModuleWithVideo'
-export default function Home(showNavbar = false) {
+const Navbar = lazy(() => import('@/components/Navbar'));
+const Hero = lazy(() => import('@/components/Hero'));
+const Collaborators = lazy(() => import('@/components/Collaborators'));
+const EBTExplanation = lazy(() => import('@/components/EBTExplanation'));
+const Footer = lazy(() => import('@/components/Footer'));
+
+export default function Home({ showNavbar = true }) {
     return (
-        <>
-            {
-                showNavbar && <Navbar />
-            }
+        <Suspense fallback={<div>Loading...</div>}>
+            {showNavbar && <Navbar />}
             <Hero />
             <Collaborators />
             <EBTExplanation />
-            <ModuleWithImage />           
-            <ModuleWithVideo
-            />
+            <ModuleWithImage />
+            <ModuleWithVideo />
             <Gallery />
             <Footer />
-        </>
-    )
+        </Suspense>
+    );
 }

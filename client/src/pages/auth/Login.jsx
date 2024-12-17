@@ -7,7 +7,6 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import Navbar from "@/components/Navbar";
 
 export function Login() {
     const [email, setEmail] = useState("");
@@ -58,7 +57,6 @@ export function Login() {
 
     return (
         <>
-            <Navbar />
             <div className="flex items-center justify-center min-h-screen bg-gray-200">
                 <Card className="w-full max-w-sm p-6 space-y-6 bg-white shadow-lg rounded-xl">
                     <div className="text-center">
