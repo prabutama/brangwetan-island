@@ -70,7 +70,7 @@ const Hero = () => {
                             transition={{ delay: 0.5, type: 'spring', stiffness: 150 }}
                         >
                             <span className="animate-pulse mr-2 h-2 w-2 rounded-full bg-green-500"></span>
-                            Menuju lingkungan hidup bersih
+                            Menjaga lingkungan bukan hanya angan-angan, tapi tindakan.
                         </motion.div>
                         <motion.h1 className="mb-2 lg:mb-6 text-3xl tracking-tight font-bold text-left sm:text-5xl lg:text-6xl">
                             <motion.span
