@@ -17,6 +17,10 @@ app.use("/api/collaborator", collaboratorRoutes)
 app.use("/api/module", moduleRoutes);
 app.use("/api/photo", photoRoutes);
 
+app.get("/", (req, res) => {
+    res.send("Brangwetan island API");
+});
+
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });
