@@ -30,7 +30,7 @@ export function Gallery() {
     useEffect(() => {
         const fetchPhotos = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/photo");
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/photo`);
                 setPhotos(response.data.photos);
             } catch (error) {
                 console.error("Error fetching photos:", error);
@@ -69,7 +69,7 @@ export function Gallery() {
     // Delete photo
     const handleDeletePhoto = async (photoId) => {
         try {
-            await axios.delete(`http://localhost:3000/api/photo/${photoId}`, {
+            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/photo/${photoId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -114,7 +114,7 @@ export function Gallery() {
                                     >
                                         <div className="relative group">
                                             <img
-                                                src={`http://localhost:3000${item.photo_url}`}
+                                                src={`${import.meta.env.VITE_API_BASE_URL}${item.photo_url}`}
                                                 alt={`Gallery Image ${slideIndex}-${index}`}
                                                 className="w-full h-[300px] lg:h-[400px] object-cover rounded-lg transition-transform duration-300 "
                                             />
@@ -192,7 +192,7 @@ export function Gallery() {
                         />
                         <Form
                             title="Foto"
-                            api={`http://localhost:3000/api/photo`}
+                            api={`${import.meta.env.VITE_API_BASE_URL}/api/photo`}
                             method="POST"
                             handleToggleForm={handleToggleForm}
                             fields={[{ type: "file", name: "photo", label: "Foto" }]}

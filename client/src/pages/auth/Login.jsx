@@ -20,7 +20,7 @@ export function Login() {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post("http://localhost:3000/api/login", { email, password });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/login`, { email, password });
 
             console.log("API Response:", response.data);
 

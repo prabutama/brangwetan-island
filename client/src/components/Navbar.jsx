@@ -33,7 +33,7 @@ const Navbar = () => {
                 key={index}
                 href={item.href || "#"}
                 onClick={item.action || null}
-                className={`text-lg font-semibold ${isMobile ? "text-gray-800 hover:text-indigo-500" : "text-white transition-colors duration-300"
+                className={`text-md font-semibold flex items-end gap-2 ${isMobile ? "text-gray-800 hover:text-green-500" : "text-white transition-colors duration-300"
                     }`}
             >
                 {isMobile && <item.icon size={24} />}

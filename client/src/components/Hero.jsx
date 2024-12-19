@@ -64,7 +64,7 @@ const Hero = () => {
                         {...HeroAnimation.fadeIn(0.2)}
                     >
                         <motion.div
-                            className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-[12px] lg:text-[16px] font-normal lg:font-semibold text-green-800 mb-2 sm:mb-5 mt-10"
+                            className="inline-flex items-center rounded-xl lg:rounded-full bg-green-100 px-3 py-1 text-[13px] lg:text-[16px] font-semibold lg:font-semibold text-green-800 mb-2 sm:mb-5 mt-6"
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.5, type: 'spring', stiffness: 150 }}

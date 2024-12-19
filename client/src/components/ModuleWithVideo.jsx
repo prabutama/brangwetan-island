@@ -41,7 +41,7 @@ function ModuleWithVideo() {
     const deleteModule = useCallback(async () => {
         if (confirmDeleteId === null) return;
         try {
-            await axios.delete(`http://localhost:3000/api/module/${confirmDeleteId}`, {
+            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/module/${confirmDeleteId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setModules((prev) => prev.filter((module) => module.id !== confirmDeleteId));
@@ -56,7 +56,7 @@ function ModuleWithVideo() {
         const fetchModules = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get("http://localhost:3000/api/module");
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/module`);
                 setModules(response.data.modules.filter((module) => module.type === "video"));
             } catch (err) {
                 setError(err?.response?.data?.message || err.message || "Failed to fetch modules");
@@ -189,7 +189,7 @@ function ModuleWithVideo() {
                         />
                         <Form
                             title={editModule ? "Edit Modul" : "Tambah Modul"}
-                            api={`http://localhost:3000/api/module${editModule ? `/${editModule.id}` : ""}`}
+                            api={`${import.meta.env.VITE_API_BASE_URL}/api/module${editModule ? `/${editModule.id}` : ""}`}
                             method={editModule ? "PUT" : "POST"}
                             initialValues={
                                 editModule || {

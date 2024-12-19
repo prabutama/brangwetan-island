@@ -31,7 +31,7 @@ const Collaborators = () => {
     useEffect(() => {
         const fetchCollaborators = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/collaborator");
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/collaborator`);
                 const { collaborators } = response.data;
 
                 if (Array.isArray(collaborators)) {
@@ -54,7 +54,7 @@ const Collaborators = () => {
         if (!confirmDeleteId) return;
 
         try {
-            await axios.delete(`http://localhost:3000/api/collaborator/${confirmDeleteId}`, {
+            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/collaborator/${confirmDeleteId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -150,7 +150,7 @@ const Collaborators = () => {
                         >
                             <img
                                 className="w-full h-full object-contain rounded-full transition-all duration-300 hover:grayscale-0"
-                                src={`http://localhost:3000${collaborator.image}`}
+                                src={`${import.meta.env.VITE_API_BASE_URL}${collaborator.image}`}
                                 alt={collaborator.name}
                             />
                         </a>
@@ -168,7 +168,7 @@ const Collaborators = () => {
                         />
                         <Form
                             title="Collaborator"
-                            api="http://localhost:3000/api/collaborator"
+                            api={`${import.meta.env.VITE_API_BASE_URL}/api/collaborator`}
                             fields={[
                                 {
                                     name: "name",

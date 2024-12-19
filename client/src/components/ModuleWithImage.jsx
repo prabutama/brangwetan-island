@@ -22,7 +22,7 @@ const ModuleWithImage = () => {
     const fetchModules = async () => {
         setIsLoading(true);
         try {
-            const { data } = await axios.get("http://localhost:3000/api/module");
+            const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/module`);
             const filteredModules = data.modules.filter((module) => module.type === "image");
             setModules(filteredModules);
         } catch (err) {
@@ -46,7 +46,7 @@ const ModuleWithImage = () => {
         if (confirmDeleteId === null) return;
 
         try {
-            await axios.delete(`http://localhost:3000/api/module/${confirmDeleteId}`, {
+            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/module/${confirmDeleteId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -132,7 +132,7 @@ const ModuleWithImage = () => {
                         >
                             <div className="relative w-full h-72">
                                 <img
-                                    src={`http://localhost:3000${module.content}`}
+                                    src={`${import.meta.env.VITE_API_BASE_URL}${module.content}`}
                                     alt={module.title}
                                     className="w-full h-full object-cover"
                                 />
@@ -190,7 +190,7 @@ const ModuleWithImage = () => {
                         />
                         <Form
                             title={editModule ? "Edit Modul" : "Tambah Modul"}
-                            api={`http://localhost:3000/api/module${editModule ? `/${editModule.id}` : ""}`}
+                            api={`${import.meta.env.VITE_API_BASE_URL}/api/module${editModule ? `/${editModule.id}` : ""}`}
                             method={editModule ? "PUT" : "POST"}
                             initialValues={editModule || { title: "", description: "", type: "image", content: null }}
                             fields={[
