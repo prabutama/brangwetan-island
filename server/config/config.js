@@ -21,5 +21,11 @@ module.exports = {
         use_env_variable: "DB_URI",
         dialect: process.env.DB_DIALECT || "postgres",
         logging: false, 
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false,
+            },
+        },
     },
 };
