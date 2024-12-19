@@ -64,13 +64,13 @@ const Hero = () => {
                         {...HeroAnimation.fadeIn(0.2)}
                     >
                         <motion.div
-                            className="inline-flex items-center rounded-xl lg:rounded-full bg-green-100 px-3 py-1 text-[13px] lg:text-[16px] font-semibold lg:font-semibold text-green-800 mb-2 sm:mb-5 mt-6"
+                            className="inline-flex items-center rounded-xl lg:rounded-full bg-green-100 px-3 py-1 text-[14px] lg:text-[16px] font-semibold lg:font-semibold text-green-800 mb-2 sm:mb-5 mt-[8%]"
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.5, type: 'spring', stiffness: 150 }}
                         >
                             <span className="animate-pulse mr-2 h-2 w-2 rounded-full bg-green-500"></span>
-                            Menjaga lingkungan bukan hanya angan-angan, tapi tindakan.
+                            Wujudkan energi yang lebih bersih
                         </motion.div>
                         <motion.h1 className="mb-2 lg:mb-6 text-3xl tracking-tight font-bold text-left sm:text-5xl lg:text-6xl">
                             <motion.span
