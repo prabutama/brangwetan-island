@@ -22,11 +22,5 @@ module.exports = {
         use_env_variable: "DB_URI",
         dialect: pg,
         logging: false, 
-        dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false,
-            },
-        },
     },
 };
