@@ -1,4 +1,5 @@
-require("dotenv").config(); // Load .env variables
+require("dotenv").config();
+import pg from "pg";
 
 module.exports = {
     development: {
@@ -6,7 +7,7 @@ module.exports = {
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         host: process.env.DB_HOST,
-        dialect: process.env.DB_DIALECT || "postgres",
+        dialect: pg,
         port: process.env.DB_PORT || 5432,
     },
     test: {
@@ -14,12 +15,12 @@ module.exports = {
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         host: process.env.DB_HOST,
-        dialect: process.env.DB_DIALECT || "postgres",
+        dialect: pg,
         port: process.env.DB_PORT || 5432,
     },
     production: {
         use_env_variable: "DB_URI",
-        dialect: process.env.DB_DIALECT || "postgres",
+        dialect: pg,
         logging: false, 
         dialectOptions: {
             ssl: {
