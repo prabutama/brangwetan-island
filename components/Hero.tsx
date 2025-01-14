@@ -199,16 +199,6 @@ const Hero: React.FC = () => {
                   dragElastic={0.1}
                   onDragEnd={() => setBounceCount((prev) => prev + 1)}
                 />
-                {bounceCount > 0 && (
-                  <motion.div
-                    className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-white text-green-600 px-3 py-1 rounded-full text-sm font-bold"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                  >
-                    Wah! Kamu sudah menggerakkan gambar {bounceCount} kali!
-                  </motion.div>
-                )}
               </div>
             </div>
           </motion.div>
