@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
@@ -67,7 +66,6 @@ const BlurCircle: React.FC<BlurCircleProps> = ({ className, delay }) => (
 );
 
 const Hero: React.FC = () => {
-  const [bounceCount, setBounceCount] = useState(0);
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-green-50 via-white to-blue-50 min-h-screen flex items-center pt-32 sm:pt-0 lg:pt-0">
@@ -197,7 +195,6 @@ const Hero: React.FC = () => {
                   drag
                   dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
                   dragElastic={0.1}
-                  onDragEnd={() => setBounceCount((prev) => prev + 1)}
                 />
               </div>
             </div>
