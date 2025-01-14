@@ -1,14 +1,14 @@
 "use client";
 
 import React, { JSX } from "react";
-import { motion } from "framer-motion";
+import { motion, TargetAndTransition, Transition } from "framer-motion";
 import { Sun, Wind, Zap } from "lucide-react";
 import Image from "next/image";
 
 interface DecorativeElement {
   className: string;
-  animation: any; 
-  transition: any; 
+  animation: TargetAndTransition; 
+  transition: Transition; 
   icon: JSX.Element;
 }
 
@@ -127,6 +127,8 @@ const EBTExplanation: React.FC = () => {
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
               <Image
+                width={1000}
+                height={1000}
                 src="/img/renewable-energy.webp"
                 alt="Renewable Energy Mascot"
                 className="w-full h-full object-contain sm scale-110"

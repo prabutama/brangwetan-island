@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function EBTImplementation() {
   const energySources = [
@@ -87,7 +88,9 @@ export default function EBTImplementation() {
             >
               <CardContent>
                 <div className="aspect-video mb-4 overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-[1.02]">
-                  <img
+                  <Image
+                    width={1000}
+                    height={1000}
                     src={source.image}
                     alt={`${source.title}`}
                     className="w-full h-full object-cover"
